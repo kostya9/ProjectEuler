@@ -11,12 +11,35 @@ namespace Project_Euler.Problems
         static List<int> primeMultis;
         public static void Run()
         {
+
             int sum = 1;
             primeMultis = new List<int>();
-            for (int i = 2; ;i++)
+            for (int i = 2; ; i++)
             {
+                Dictionary<int, int> newDic = new Dictionary<int, int>();
+                int g = 1;
                 sum += i;
-                if (for() > 5)
+                foreach (var n in FindAllMultiplyersOf(i))
+                {
+                    
+                    if (newDic.ContainsKey(n.Key))
+                        newDic[n.Key] += n.Value;
+                    else
+                        newDic[n.Key] = n.Value;
+                }
+                foreach (var n in FindAllMultiplyersOf(i + 1))
+                {
+                    if (newDic.ContainsKey(n.Key))
+                        newDic[n.Key] += n.Value;
+                    else
+                        newDic[n.Key] = n.Value;
+                }
+                foreach (var n in newDic)
+                    if (n.Key == 2)
+                        g *= n.Value;
+                    else
+                        g *= n.Value + 1;
+                if (g > 500)
                     break;
             }
             Console.WriteLine(sum);
@@ -41,9 +64,12 @@ namespace Project_Euler.Problems
                 }
             }
             if (isPrime)
+            {
                 primes.Add(n, 1);
+                primeMultis.Add(n);
+            }
             return primes;
-           
+
         }
         static int Factorize(int given)
         {
@@ -51,7 +77,7 @@ namespace Project_Euler.Problems
             for (int i = 2; i <= given; i++)
                 f *= i;
             return f;
-                
+
         }
     }
 }
